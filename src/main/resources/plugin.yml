@@ -1,0 +1,13 @@
+name: RpgSyncPlugin
+version: '1.0'
+main: com.rpgsync.rpgSyncPlugin.RpgSyncPlugin
+api-version: '1.20'
+softdepend: [PlaceholderAPI]
+commands:
+  사유:
+    description: "디스코드 음성 채널 이탈 사유를 제출합니다."
+    usage: "/사유 <상세내용>"
+  rpgsync:
+    description: "RpgSyncPlugin 관리자 명령어입니다."
+    usage: "/rpgsync <bypass/redis/reload>"
+    permission: rpgsync.admin

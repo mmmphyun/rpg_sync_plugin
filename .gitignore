@@ -1,0 +1,21 @@
+# Gradle
+.gradle/
+build/
+out/
+
+# IDE & Editor
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+
+# Minecraft Runtime Server Directory
+run/
+
+# Symlinks & External Docs
+docs
+
+# OS specific
+.DS_Store
+Thumbs.db

@@ -1,0 +1,16 @@
+# RpgSyncPlugin 설정 파일
+
+# Supabase PostgreSQL (HikariCP) 연결 설정
+database:
+  jdbc-url: "jdbc:postgresql://db.your-supabase-project.supabase.co:6543/postgres?prepareThreshold=0"
+  username: "postgres"
+  password: "YOUR_SUPABASE_PASSWORD"
+  maximum-pool-size: 3
+  connection-timeout: 5000
+
+# Redis 연결 설정
+redis:
+  host: "127.0.0.1"
+  port: 6379
+  password: "YOUR_REDIS_PASSWORD"
+  connection-timeout: 2000
