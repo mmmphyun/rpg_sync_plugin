@@ -22,37 +22,12 @@
 
 ## 2. 시스템 연동 구조
 
-```mermaid
-flowchart LR
-    subgraph CloudHost ["상위 프로젝트 백엔드 (GCP e2-micro / 미국)"]
-        BOT["Discord Bot<br/>(discord.py / asyncio)"]
-        WEB["Admin Web API<br/>(FastAPI)"]
-        REDIS[("Redis 7.4<br/>(발행/구독 및 캐시)")]
-    end
-
-    subgraph ManagedDB ["원격 데이터 레이어 (Supabase / 한국)"]
-        SUPA[("Supabase PostgreSQL<br/>(users 테이블 / PgBouncer)")]
-    end
-
-    subgraph LocalGame ["인게임 마인크래프트 서버 (PaperMC 1.20.1)"]
-        SUB["RedisPubSubListener<br/>(백그라운드 스레드)"]
-        SCHED["KickScheduler<br/>(60초/300초 카운트다운)"]
-        PRE["PlayerConnectionListener<br/>(AsyncPlayerPreLoginEvent)"]
-        L1["로컬 L1 메모리 캐시<br/>(ConcurrentHashMap)"]
-        DBM["DatabaseManager<br/>(HikariCP 5.1.0)"]
-    end
-
-    BOT -->|음성 입퇴장 이벤트 발행| REDIS
-    BOT -->|유저 정보 동기화| SUPA
-    WEB -->|관리자 예외 처리 및 설정| REDIS
-    WEB -->|유저 권한 관리| SUPA
-
-    REDIS <-->|Tailscale 암호화 터널| SUB
-    SUB -->|이탈 감지 시 타이머 가동| SCHED
-    PRE -->|L1 캐시 미스 시 DB 비동기 조회| DBM
-    DBM <-->|JDBC 질의 (prepareThreshold=0)| SUPA
-    PRE -->|닉네임 사전 로드| L1
-```
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="images/rpg-sync-plugin-architecture-dark.svg">
+    <img alt="RpgSyncPlugin 시스템 연동 아키텍처 다이어그램" src="images/rpg-sync-plugin-architecture-light.svg" width="100%">
+  </picture>
+</p>
 
 ---
 

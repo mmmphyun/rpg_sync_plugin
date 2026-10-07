@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 480" width="100%" height="100%" style="background:#111113; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Pretendard', sans-serif;">
+  <defs>
+    <marker id="arrow-neutral-dark" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#52525B"/>
+    </marker>
+    <marker id="arrow-db-dark" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#7D98B3"/>
+    </marker>
+    <marker id="arrow-redis-dark" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#D9826C"/>
+    </marker>
+    <marker id="arrow-core-dark" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 8 5 L 0 9 z" fill="#4E9F6E"/>
+    </marker>
+  </defs>
+
+  <!-- ==================== 1. 상단: 클라우드 인프라 (원격) ==================== -->
+  <g transform="translate(30, 24)">
+    <rect width="880" height="104" rx="10" fill="#18181C" stroke="#2A2A30" stroke-width="1.2"/>
+    <text x="24" y="24" font-size="11" font-weight="700" fill="#A1A1AA" letter-spacing="0.06em">클라우드 인프라 (상위 백엔드 및 원격 DB)</text>
+
+    <!-- Node 1: Supabase (좌측) -->
+    <rect x="24" y="34" width="240" height="54" rx="6" fill="#212126" stroke="#33333C" stroke-width="1"/>
+    <text x="40" y="56" font-size="13" font-weight="700" fill="#EDEDED">Supabase PostgreSQL</text>
+    <text x="40" y="74" font-size="11" fill="#9E9EA8">PgBouncer 풀러 (포트 6543 / 서울)</text>
+
+    <!-- Node 2: Discord Bot (중앙) -->
+    <rect x="330" y="34" width="220" height="54" rx="6" fill="#212126" stroke="#33333C" stroke-width="1"/>
+    <text x="346" y="56" font-size="13" font-weight="700" fill="#EDEDED">Discord Bot</text>
+    <text x="346" y="74" font-size="11" fill="#9E9EA8">discord.py (비동기 이벤트 발행)</text>
+
+    <!-- Node 3: Redis 7.4 (우측) -->
+    <rect x="616" y="34" width="240" height="54" rx="6" fill="#212126" stroke="#33333C" stroke-width="1"/>
+    <text x="632" y="56" font-size="13" font-weight="700" fill="#EDEDED">Redis 7.4 브로커</text>
+    <text x="632" y="74" font-size="11" fill="#9E9EA8">발행/구독 채널 (미국 오리건)</text>
+
+    <!-- 클라우드 내부 연결선: Bot -> Redis -->
+    <path d="M 550 61 L 610 61" stroke="#52525B" stroke-width="1.2" stroke-dasharray="3 3" marker-end="url(#arrow-neutral-dark)"/>
+    <text x="580" y="53" font-size="9" fill="#9E9EA8" text-anchor="middle">발행</text>
+  </g>
+
+  <!-- ==================== 2. 중앙 통신 경로 (완전한 1:1 수직선, 교차 0개) ==================== -->
+  <!-- 좌측 수직 경로: Supabase -> Netty 비동기 풀 (HikariCP) -->
+  <path d="M 174 128 L 174 204" stroke="#7D98B3" stroke-width="1.8" stroke-dasharray="4 3" marker-end="url(#arrow-db-dark)"/>
+  <rect x="84" y="152" width="180" height="22" rx="4" fill="#1D1D22" stroke="#35353E" stroke-width="0.8"/>
+  <text x="174" y="167" font-size="10" font-weight="600" fill="#7D98B3" text-anchor="middle">HikariCP (prepareThreshold=0)</text>
+
+  <!-- 우측 수직 경로: Redis -> Jedis 리스너 (Tailscale) -->
+  <path d="M 766 128 L 766 204" stroke="#D9826C" stroke-width="1.8" marker-end="url(#arrow-redis-dark)"/>
+  <rect x="686" y="152" width="160" height="22" rx="4" fill="#1D1D22" stroke="#35353E" stroke-width="0.8"/>
+  <text x="766" y="167" font-size="10" font-weight="600" fill="#D9826C" text-anchor="middle">Tailscale 사설 터널 (6379)</text>
+
+  <!-- ==================== 3. 하단: 인게임 마인크래프트 서버 (PaperMC 1.20.1) ==================== -->
+  <g transform="translate(30, 206)">
+    <rect width="880" height="248" rx="10" fill="#18181C" stroke="#2A2A30" stroke-width="1.2"/>
+    <text x="24" y="24" font-size="11" font-weight="700" fill="#A1A1AA" letter-spacing="0.06em">인게임 마인크래프트 서버 (PaperMC 1.20.1) — RpgSyncPlugin</text>
+
+    <!-- [Zone 1: 좌측] 비동기 네트워크 풀 (Netty) -->
+    <rect x="24" y="38" width="240" height="190" rx="8" fill="#212126" stroke="#33333C" stroke-width="1"/>
+    <text x="40" y="60" font-size="12" font-weight="700" fill="#EDEDED">비동기 네트워크 풀 (Netty)</text>
+    <text x="40" y="75" font-size="10" fill="#9E9EA8">로그인 검증 및 L1 메모리 적재</text>
+
+    <!-- Sub-node 1-1: PreLogin -->
+    <rect x="36" y="88" width="216" height="46" rx="5" fill="#18181C" stroke="#33333C" stroke-width="0.8"/>
+    <text x="48" y="107" font-size="11" font-weight="600" fill="#EDEDED">사전 로그인 비동기 검증</text>
+    <text x="48" y="123" font-size="9" fill="#9E9EA8">AsyncPlayerPreLoginEvent</text>
+
+    <!-- Sub-node 1-2: L1 Cache -->
+    <rect x="36" y="156" width="216" height="52" rx="5" fill="#18181C" stroke="#33333C" stroke-width="0.8"/>
+    <text x="48" y="176" font-size="11" font-weight="600" fill="#EDEDED">로컬 L1 메모리 캐시</text>
+    <text x="48" y="194" font-size="9" fill="#9E9EA8">ConcurrentHashMap (계정·닉네임)</text>
+
+    <!-- PreLogin -> Cache 수직선 -->
+    <path d="M 144 134 L 144 150" stroke="#52525B" stroke-width="1.2" marker-end="url(#arrow-neutral-dark)"/>
+
+    <!-- [Zone 2: 중앙] 메인 틱 스레드 (핵심 코어 - 대칭 중심) -->
+    <rect x="290" y="38" width="300" height="190" rx="8" fill="#16251D" stroke="#2A523E" stroke-width="1.4"/>
+    <rect x="466" y="46" width="112" height="18" rx="9" fill="#224230"/>
+    <text x="522" y="59" font-size="9" font-weight="700" fill="#D1FAE5" text-anchor="middle">20 TPS 엄격 보장</text>
+    <text x="306" y="60" font-size="13" font-weight="700" fill="#A3E0BC">메인 틱 스레드</text>
+    <text x="306" y="75" font-size="10" fill="#A3E0BC" opacity="0.85">외부 I/O 블로킹 0화</text>
+
+    <!-- Core Inner Card -->
+    <rect x="304" y="88" width="272" height="120" rx="6" fill="#18181C" stroke="#2A523E" stroke-width="1"/>
+    <text x="318" y="112" font-size="12" font-weight="700" fill="#F4F4F5">인게임 상태 반영 (동기)</text>
+    <text x="318" y="136" font-size="11" fill="#EDEDED">• L1 캐시 즉시 조회 (월드 진입 / 안내)</text>
+    <text x="318" y="158" font-size="11" fill="#EDEDED">• 화면 타이틀 경고 출력 (음성 이탈 알림)</text>
+    <text x="318" y="180" font-size="11" fill="#EDEDED">• 최종 강제 퇴장 위임 실행 (동기 API 호출)</text>
+
+    <!-- [Zone 3: 우측] 전용 구독 스레드 (Jedis) -->
+    <rect x="616" y="38" width="240" height="190" rx="8" fill="#212126" stroke="#33333C" stroke-width="1"/>
+    <text x="632" y="60" font-size="12" font-weight="700" fill="#EDEDED">전용 구독 스레드 (Jedis)</text>
+    <text x="632" y="75" font-size="10" fill="#9E9EA8">독립 백그라운드 루프 &amp; 서킷 브레이커</text>
+
+    <!-- Sub-node 3-1: Listener -->
+    <rect x="628" y="88" width="216" height="46" rx="5" fill="#18181C" stroke="#33333C" stroke-width="0.8"/>
+    <text x="640" y="107" font-size="11" font-weight="600" fill="#EDEDED">이벤트 리스너 (Jedis)</text>
+    <text x="640" y="123" font-size="9" fill="#9E9EA8">RedisPubSubListener (음성 이탈/승인)</text>
+
+    <!-- Sub-node 3-2: Scheduler -->
+    <rect x="628" y="156" width="216" height="52" rx="5" fill="#18181C" stroke="#33333C" stroke-width="0.8"/>
+    <text x="640" y="176" font-size="11" font-weight="600" fill="#EDEDED">퇴장 스케줄러</text>
+    <text x="640" y="194" font-size="9" fill="#9E9EA8">KickScheduler (60초/300초 유예)</text>
+
+    <!-- Listener -> Scheduler 수직선 -->
+    <path d="M 736 134 L 736 150" stroke="#52525B" stroke-width="1.2" marker-end="url(#arrow-neutral-dark)"/>
+
+    <!-- ==================== 내부 통신선 (관통 없는 대칭 인입선) ==================== -->
+    <!-- 좌측 L1 캐시 -> 중앙 메인 틱 (수평 직진선, 관통 0) -->
+    <path d="M 252 182 L 284 182" stroke="#7D98B3" stroke-width="1.6" stroke-dasharray="3 3" marker-end="url(#arrow-db-dark)"/>
+    <rect x="238" y="146" width="56" height="18" rx="3" fill="#1D1D22" stroke="#35353E" stroke-width="0.7"/>
+    <text x="266" y="158" font-size="9" font-weight="600" fill="#7D98B3" text-anchor="middle">즉시 조회</text>
+
+    <!-- 우측 스케줄러 -> 중앙 메인 틱 (수평 직진선, 관통 0) -->
+    <path d="M 628 182 L 596 182" stroke="#D9826C" stroke-width="1.6" marker-end="url(#arrow-redis-dark)"/>
+    <rect x="586" y="146" width="60" height="18" rx="3" fill="#1D1D22" stroke="#35353E" stroke-width="0.7"/>
+    <text x="616" y="158" font-size="9" font-weight="600" fill="#D9826C" text-anchor="middle">태스크 위임</text>
+  </g>
+</svg>
