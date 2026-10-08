@@ -25,9 +25,17 @@
 <p align="center">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="images/rpg-sync-plugin-architecture-dark.svg">
+    <source media="(prefers-color-scheme: light)" srcset="images/rpg-sync-plugin-architecture-light.svg">
     <img alt="RpgSyncPlugin 시스템 연동 아키텍처 다이어그램" src="images/rpg-sync-plugin-architecture-light.svg" width="100%">
   </picture>
 </p>
+
+* **아키텍처 데이터 흐름 및 분산 제어 규약**:
+  * **① 이벤트 발행**: GCP VM의 Discord 봇이 음성 이탈/승인 이벤트를 Redis Pub/Sub 채널로 발행.
+  * **② HikariCP DB 검증**: Netty 비동기 풀에서 PgBouncer(6543 포트) 호환 풀러 설정(`prepareThreshold=0`)으로 유저 등록 상태 사전 조회.
+  * **③ Tailscale 사설 터널**: 공인 IP가 없는 로컬 PC와 GCP VM의 Redis(6379 포트) 간 WireGuard 암호화 터널 통신.
+  * **④ L1 Fast Path**: 사전 로그인 성공 시 한글 닉네임과 계정명을 `ConcurrentHashMap`에 적재하여 월드 진입 시 즉시 반환.
+  * **⑤ 메인 틱 위임**: Jedis 백그라운드 리스너가 이벤트를 상시 청취한 후 인게임 Bukkit API 작업만 20 TPS 메인 틱으로 위임.
 
 ---
 
